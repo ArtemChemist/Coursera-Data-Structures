@@ -20,6 +20,13 @@ class TreeHeight:
                                 i = self.parent[i]
                         maxHeight = max(maxHeight, height);
                 return maxHeight;
+class Node:
+    Level = 0
+    def Level (self):
+        return self.Level
+
+class 
+
 
 def main():
   tree = TreeHeight()
