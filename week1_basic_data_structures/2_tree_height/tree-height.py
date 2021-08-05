@@ -19,28 +19,10 @@ class Tree:
 
         def compute_height(self):
                 maxHeight = 0
-<<<<<<< HEAD
                 for nd in self.nodes:
                         if nd.GetLevel() > maxHeight:
                                 maxHeight = nd.GetLevel()
                 return maxHeight
-=======
-                for vertex in range(self.n):
-                        height = 0
-                        i = vertex
-                        while i != -1:
-                                height += 1
-                                i = self.parent[i]
-                        maxHeight = max(maxHeight, height);
-                return maxHeight;
-class Node:
-    Level = 0
-    def Level (self):
-        return self.Level
-
-class 
-
->>>>>>> main
 
 class Node:
         def __init__(self, ID, parent_ID, ParentTree:Tree):
