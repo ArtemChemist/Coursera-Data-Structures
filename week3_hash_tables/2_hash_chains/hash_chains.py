@@ -1,4 +1,5 @@
 # python3
+from collections import deque
 
 class Query:
 
@@ -17,41 +18,44 @@ class QueryProcessor:
     def __init__(self, bucket_count):
         self.bucket_count = bucket_count
         # store all strings in one list
-        self.elems = []
+        self.elems = [deque([]) for i in range(self.bucket_count)]
 
     def _hash_func(self, s):
         ans = 0
-        for c in reversed(s):
-            ans = (ans * self._multiplier + ord(c)) % self._prime
+        i=0
+        for c in s:
+            ans = ans + ord(c)*self._multiplier**i
+            i+=1
+        ans = ans % self._prime
         return ans % self.bucket_count
-
-    def write_search_result(self, was_found):
-        print('yes' if was_found else 'no')
-
-    def write_chain(self, chain):
-        print(' '.join(chain))
 
     def read_query(self):
         return Query(input().split())
 
     def process_query(self, query):
         if query.type == "check":
-            # use reverse order, because we append strings to the end
-            self.write_chain(cur for cur in reversed(self.elems)
-                        if self._hash_func(cur) == query.ind)
+            print(*self.elems[query.ind])
         else:
-            try:
-                ind = self.elems.index(query.s)
-            except ValueError:
-                ind = -1
+            #figure out hash tag
+            tag = self._hash_func(query.s)
+            #see if this string is already in database
+            in_DB = query.s in self.elems[tag]
+
             if query.type == 'find':
-                self.write_search_result(ind != -1)
+                if query.s not in self.elems[tag]: 
+                    print('no')
+                else:
+                    print('yes')
+
             elif query.type == 'add':
-                if ind == -1:
-                    self.elems.append(query.s)
+                if not in_DB:
+                     self.elems[tag].appendleft(query.s)
+
+            elif query.type == 'del':
+                if in_DB:
+                    self.elems[tag].remove(query.s)
             else:
-                if ind != -1:
-                    self.elems.pop(ind)
+                pass
 
     def process_queries(self):
         n = int(input())
