@@ -18,8 +18,32 @@ class TreeOrders:
 
   def inOrder(self):
     self.result = []
-    # Finish the implementation
-    # You may need to add a new recursive method to do that
+    stack = []
+    current = 0
+    while len(self.result) < self.n:
+      stack.append(current)
+      if self.left[current] >0:
+        current = self.left[current]
+        continue
+      else:
+        self.result.append(self.key[current])
+        current = stack.pop(-1)
+
+        if self.right[current]>0:
+          current = self.right[current]
+        else:
+          current = stack.pop(-1)
+          self.result.append(self.key[current])
+
+
+
+    
+    #Start from the root, call it current .
+    #If current is not NULL, push current on to stack.
+    #Move to left child of current and go to step 2.
+    #If current  == NULL and !stack.empty(),  current = s.pop.
+    #Process current and set current = current.right, go to step 2.
+
                 
     return self.result
 
@@ -41,7 +65,9 @@ def main():
 	tree = TreeOrders()
 	tree.read()
 	print(" ".join(str(x) for x in tree.inOrder()))
-	print(" ".join(str(x) for x in tree.preOrder()))
-	print(" ".join(str(x) for x in tree.postOrder()))
+	#print(" ".join(str(x) for x in tree.preOrder()))
+	#print(" ".join(str(x) for x in tree.postOrder()))
 
-threading.Thread(target=main).start()
+if __name__ == '__main__':
+  main()
+#threading.Thread(target=main).start()
