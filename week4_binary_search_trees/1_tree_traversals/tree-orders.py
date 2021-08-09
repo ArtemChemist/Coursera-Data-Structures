@@ -4,69 +4,58 @@ import sys, threading
 sys.setrecursionlimit(10**6) # max depth of recursion
 threading.stack_size(2**27)  # new thread will get stack of such size
 
+class Node:
+  def __init__(self, key, left, right):
+    self.key = key
+    self.left = left
+    self.right = right
+
 class TreeOrders:
+  nodes = []
+  result = []
+
   def read(self):
     self.n = int(sys.stdin.readline())
-    self.key = [0 for i in range(self.n)]
-    self.left = [0 for i in range(self.n)]
-    self.right = [0 for i in range(self.n)]
     for i in range(self.n):
       [a, b, c] = map(int, sys.stdin.readline().split())
-      self.key[i] = a
-      self.left[i] = b
-      self.right[i] = c
-
-  def inOrder(self):
-    self.result = []
-    stack = []
-    current = 0
-    while len(self.result) < self.n:
-      stack.append(current)
-      if self.left[current] >0:
-        current = self.left[current]
-        continue
-      else:
-        self.result.append(self.key[current])
-        current = stack.pop(-1)
-
-        if self.right[current]>0:
-          current = self.right[current]
-        else:
-          current = stack.pop(-1)
-          self.result.append(self.key[current])
+      self.nodes.append(Node(a,b,c))
 
 
+  def inOrder(self, current):
+    if current == -1:
+      return
+    self.inOrder(self.nodes[current].left)
+    self.result.append(self.nodes[current].key)
+    self.inOrder(self.nodes[current].right)
 
+    return self.result
+
+  def preOrder(self,current):
+    if current == -1:
+      return
+    self.result.append(self.nodes[current].key)
+    self.preOrder(self.nodes[current].left)
+    self.preOrder(self.nodes[current].right)
     
-    #Start from the root, call it current .
-    #If current is not NULL, push current on to stack.
-    #Move to left child of current and go to step 2.
-    #If current  == NULL and !stack.empty(),  current = s.pop.
-    #Process current and set current = current.right, go to step 2.
-
-                
     return self.result
 
-  def preOrder(self):
-    self.result = []
-    # Finish the implementation
-    # You may need to add a new recursive method to do that
-                
-    return self.result
-
-  def postOrder(self):
-    self.result = []
-    # Finish the implementation
-    # You may need to add a new recursive method to do that
-                
+  def postOrder(self, current):
+    if current == -1:
+      return
+    self.postOrder(self.nodes[current].left)
+    self.postOrder(self.nodes[current].right)
+    self.result.append(self.nodes[current].key)
     return self.result
 
 def main():
-	tree = TreeOrders()
-	tree.read()
-	print(" ".join(str(x) for x in tree.inOrder()))
-	#print(" ".join(str(x) for x in tree.preOrder()))
-	#print(" ".join(str(x) for x in tree.postOrder()))
+    tree = TreeOrders()
+    tree.read()
+    print(" ".join(str(x) for x in tree.inOrder(0)))
+    tree.result.clear()
+    print(" ".join(str(x) for x in tree.preOrder(0)))
+    tree.result.clear()
+    print(" ".join(str(x) for x in tree.postOrder(0)))
+    tree.result.clear()
 
 if __name__ == '__main__':
   main()
