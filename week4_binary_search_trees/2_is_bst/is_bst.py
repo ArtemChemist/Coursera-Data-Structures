@@ -15,46 +15,44 @@ class Node:
     self.left = left
     self.right = right
 
-class BinaryTree:
-  nodes = []
 
-  isBST = True
+class BinaryTree:
 
   def __init__(self):
     self.nodes = []
+    self.result = []
     self.isBST = True
+    self.size = 0
   
   def read(self, inpt):
     for i in inpt:
       self.nodes.append(Node(i[0],i[1],i[2]))
+      self.size+=1
     if len(self.nodes) == 0:
-      isBST = True
+      self.isBST = True
+
+  def inOrder(self, current):
+    if current == -1:
+      return
+    self.inOrder(self.nodes[current].left)
+    self.result.append(self.nodes[current].key)
+    self.inOrder(self.nodes[current].right)
+
+    return self.result
 
 
-  def IsBST(self, current):
-    if self.isBST:
-      return True
-    Right_Is = False
-    Right_Is = False
-    
-    if self.nodes[current].left != -1:
-      Left_Is = self.IsBST(self.nodes[current].left)
-      Left = self.nodes[self.nodes[current].left]
-      Left_Is = Left_Is and (Left.key<self.nodes[current].key)
-    else:
-      Left_Is = True
+  def Set_BST_Propety(self, current):
+    if current == -1:
+      return 
+    self.Set_BST_Propety(self.nodes[current].left)
+    self.result.append(self.nodes[current].key)
+    if len(self.result)>1:
+      self.isBST = self.isBST and (self.result[-1]>self.result[-2])
+    elif self.size == 1:
+      self.isBST
+    self.Set_BST_Propety(self.nodes[current].right)
 
-    if self.nodes[current].right != -1:
-      Right_Is = self.IsBST(self.nodes[current].right)
-      Right = self.nodes[self.nodes[current].right]
-      Right_Is = Right_Is and (Right.key>self.nodes[current].key)
-    else:
-      Right_Is = True
-
-    return Left_Is and Right_Is
-
-
-
+    return 
 
 
 def main():
@@ -65,8 +63,8 @@ def main():
     data.append(list(map(int, sys.stdin.readline().strip().split())))
   if (len(data)>0):
     tree.read(data)
-
-  if tree.IsBST(0):
+    tree.Set_BST_Propety(0)
+  if tree.isBST:
     print("CORRECT")
   else:
     print("INCORRECT")
