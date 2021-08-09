@@ -57,6 +57,6 @@ def main():
     print(" ".join(str(x) for x in tree.postOrder(0)))
     tree.result.clear()
 
-if __name__ == '__main__':
-  main()
-#threading.Thread(target=main).start()
+#if __name__ == '__main__':
+#  main()
+threading.Thread(target=main).start()
