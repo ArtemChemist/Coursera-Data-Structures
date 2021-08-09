@@ -10,10 +10,13 @@ def IsBinarySearchTree(tree):
   return True
 
 class Node:
-  def __init__(self, key, left, right):
+  def __init__(self, key, left, right, ID):
     self.key = key
     self.left = left
     self.right = right
+    self.ID = ID
+    self.BST_here = True
+
 
 
 class BinaryTree:
@@ -21,13 +24,14 @@ class BinaryTree:
   def __init__(self):
     self.nodes = []
     self.result = []
+    self.ID_Tracker = []
     self.isBST = True
     self.size = 0
     self.counter = 0
   
   def read(self, inpt):
-    for i in inpt:
-      self.nodes.append(Node(i[0],i[1],i[2]))
+    for i in range (0, len(inpt)):
+      self.nodes.append(Node(inpt[i][0],inpt[i][1],inpt[i][2],i))
       self.size+=1
 
   def inOrder(self, current):
@@ -43,20 +47,25 @@ class BinaryTree:
     if self.size<2:
       return True
     else:
-      self.Set_BST(0)
+      self.GetMaxMin(0)
       return self.isBST 
 
-  def Set_BST(self, current):
-    if current == -1:
-      return 
-    self.Set_BST(self.nodes[current].left)
-    self.result.append(self.nodes[current].key)
-    self.counter +=1
-    if self.counter>1:
-      self.isBST = self.isBST and (self.result[-1]>self.result[-2])
-    self.Set_BST(self.nodes[current].right)
-
-    return 
+  def GetMaxMin(self, current):
+    maxima = [self.nodes[current].key]
+    minima = [self.nodes[current].key]
+    if self.nodes[current].left != -1:
+        LeftMax, LeftMin = self.GetMaxMin(self.nodes[current].left)
+        self.isBST = self.isBST and ( LeftMax < self.nodes[current].key )
+        maxima.append(LeftMax)
+        minima.append(LeftMin)
+        
+    if self.nodes[current].right != -1:
+        RightMax, RightMin = self.GetMaxMin(self.nodes[current].right)
+        self.isBST = self.isBST and ( RightMin >= self.nodes[current].key )
+        maxima.append(RightMax)
+        minima.append(RightMin)
+    
+    return max(maxima), min(minima)
 
 
 def main():
